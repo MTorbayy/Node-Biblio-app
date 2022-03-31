@@ -1,18 +1,30 @@
 import livreModel from "../models/livres.model.js"
+import auteurModel from "../models/auteurs.model.js"
 import mongoose from "mongoose"
 import fs from 'fs'
 
-//******************Affichage de la liste des livres sur la page livres************************* 
-export const livres_affichage = (requete, reponse) => {
+//******************Affichage de la liste des livres et des auteurs sur la page livres************************* 
+export const livres_affichage = (requete, reponse) => { 
 
-    //Pour afficher les livres associés à cette route :
-    livreModel.find() //Pour rechercher tous les livres
-    .exec() //Pour exécuter la fonction find()
-    .then(livres => { //Pour traier le résultat véhiculé par le paramètre livre
-        reponse.render("livres/liste.html.twig", {liste : livres, message : reponse.locals.message}) //Récupération du message de session
-    }) 
-    .catch() //Pour traiter les erreurs
+    auteurModel.find() //Pour trouver tous les auteurs
+    .exec()
+    .then(auteurs => {
+    
+        //Pour afficher les livres associés à cette route :
+        livreModel.find() //Pour rechercher tous les livres
+        .populate("auteur") //indique que je veux le développement du champ auteur. Donne accès aux propriétés du champ.
+        .exec() //Pour exécuter la fonction find()
+        .then(livres => { //Pour traier le résultat véhiculé par le paramètre livre
+            reponse.render("livres/liste.html.twig", {
+                liste : livres, //Récupération des livres
+                auteurs : auteurs, //Récupération des auteurs pour la liste déroulante
+                message : reponse.locals.message //Récupération du message de session
+            }) 
+        }) 
+        .catch(error => console.log(error)) //Pour traiter les erreurs
 
+    })
+    .catch(error => console.log(error))
 }
 
 
@@ -37,14 +49,17 @@ export const ajout_livre = (req, rep) => {
 }
 
 
-//**************Affichage des détails d'un livre dans une nouvelle page***************************** */
-export const affichageLivre = (req, rep) => {     
-    console.log(req.params.id) 
+//**************Affichage des détails d'un livre et de son auteur dans une nouvelle page***************************** */
+export const affichageLivre = (req, rep) => {  
 
-    livreModel.findById(req.params.id)
-    .exec()
-    .then(livre => rep.render("livres/livre.html.twig", {livre : livre, isModification:false}) )
-    .catch(error => console.log(error))
+        livreModel.findById(req.params.id)
+        .populate("auteur")
+        .exec()
+        .then(livre => rep.render("livres/livre.html.twig", {
+            livre : livre,
+            isModification : false}) )
+        .catch(error => console.log(error))
+
 }
 
 
@@ -52,12 +67,24 @@ export const affichageLivre = (req, rep) => {
 
 //Montrer la page de modification :
 export const modificationPage = (req, rep) => {
-    console.log(req.params.id)
-
-    livreModel.findById(req.params.id)
+    
+    auteurModel.find()  
     .exec()
-    .then(livre => rep.render('livres/livre.html.twig', {livre : livre, isModification:true}))
+    .then(auteurs => {
+        livreModel.findById(req.params.id)
+        .populate("auteur")
+        .exec()
+        .then(livre => {   
+            rep.render('livres/livre.html.twig', { 
+            livre : livre,  
+            auteurs : auteurs, 
+            isModification:true
+        })})
+        .catch(error => console.log(error))
+    })
     .catch(error => console.log(error))
+
+
 }
 
 //Modification du livre :

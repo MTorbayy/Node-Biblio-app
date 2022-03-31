@@ -37,32 +37,32 @@ const routerLivre = express.Router() //Paramètrage du routeur qui contiendra le
 
 
 //******************Affichage de la liste des livres sur la page livres************************* 
-routerLivre.get('/livres', livres_affichage)
+routerLivre.get('/', livres_affichage)
 
 
 //*****************Ajouter un nouveau livre et son image************************ 
-routerLivre.post("/livres", upload.single("image"), ajout_livre) 
+routerLivre.post("/", upload.single("image"), ajout_livre) 
 
 
 //****************************Suprimer un livre*********************************
-routerLivre.post('/livres/delete/:id', suprimerLivre) 
+routerLivre.post('/delete/:id', suprimerLivre) 
 
 
 //**************Affichage des détails d'un livre dans une nouvelle page***************************** 
-routerLivre.get('/livres/:id', affichageLivre)
+routerLivre.get('/:id', affichageLivre)
 
 
 //*******************Modifier un livre**************************
 
 //Montrer la page de modification :
-routerLivre.get('/livres/modification/:id', modificationPage)
+routerLivre.get('/modification/:id', modificationPage)
 
 //MODIFICATION DU LIVRE
 //Récupération des données de modification et modification de la bdd :
-routerLivre.post('/livres/modificationServer', modificationLivre)
+routerLivre.post('/modificationServer', modificationLivre)
 
 //MODIFICATION DE L'IMAGE
-routerLivre.post("/livres/updateImage", upload.single("image"), modificationImage)
+routerLivre.post("/updateImage", upload.single("image"), modificationImage)
 
 
 export default routerLivre

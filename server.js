@@ -2,6 +2,7 @@ import express from "express"
 import morgan from "morgan"
 import routerGlobal from './routers/global.router.js'
 import routerLivre from './routers/livres.router.js'
+import routerAuteur from "./routers/auteurs.router.js"
 import mongoose from "mongoose"
 import bodyParser from "body-parser"
 import session from "express-session"
@@ -59,7 +60,8 @@ server.use((req, rep, suite) => { //mise en place de la variable de traitement
 
 
 //***********Définition des routes*****************
-server.use("/", routerLivre) //Doit être précisé en premier
+server.use("/livres/", routerLivre) //Doit être précisé avant le global
+server.use("/auteurs/", routerAuteur)
 server.use("/", routerGlobal)
 
 

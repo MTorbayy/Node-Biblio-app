@@ -3,7 +3,11 @@ import mongoose from "mongoose"
 const livreSchema = mongoose.Schema({
     _id : mongoose.Schema.Types.ObjectId,
     nom : String,
-    auteur : String,
+    auteur : {  
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "Auteur", //Collection concernée, déclarée dans le modèle
+        required : true //Tout livre doit avoir un auteur
+    },
     pages : Number, 
     description : String,   
     image : String
