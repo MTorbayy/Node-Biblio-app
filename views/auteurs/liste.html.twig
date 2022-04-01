@@ -1,3 +1,89 @@
 {% extends "base.html.twig" %}
 
 {% block titre %} Liste des auteurs {% endblock %}
+
+{% block contenu %} 
+
+    
+    <table class="table text-center monTableau" id="tableauLivres">
+        <thead>
+            <tr class="table-dark">
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Nombre de livres</th>
+                <th colspan="2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+    
+        {% for auteur in auteurs %}
+        {% if auteur.prenom != "anonyme" %}
+        
+        <tr>
+            <td class="align-middle"> <a href="/auteurs/{{auteur._id}}">{{auteur.prenom}}</a></td>
+            <td class="align-middle">{{auteur.nom}}</td>
+            {# La fonction length disponible grâce à Twig permet d'avoir le nombre de livres (virtual) : #}
+            <td class="align-middle">{{auteur.livres|length}}</td>
+            
+            {# Paramètres du bouton modifier : #}
+            <td class="align-middle">
+            <a href="/auteurs/modification/{{auteur._id}}" class="btn btn-warning">Modifier</button>
+            </td>
+            
+            
+            {# Paramètres du bouton supprimer : #}
+            <td class="align-middle">
+                <form method="POST" action="/auteurs/delete/{{auteur._id}}" onSubmit="return confirm('Voulez-vous vraiment supprimer l\'auteur ?')">                   
+                    <button class="btn btn-danger" type="submit">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+
+        {% endif %}
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    <button class="btn btn-success d-block w-100" onClick="afficherFormulaire()">Ajouter</button>
+
+    <form id="ajoutForm" class="d-none" method="POST" action=""> 
+    <fieldset>
+        <legend class="mt-2">Création d'un auteur</legend>
+        <div class="form-group">
+            <label for="nom">Nom</label>
+            {# Rajouter les attributs name pour chaque input qui seront utilisés par le serveur : #}
+            <input type="text" class="form-control" id="nom" name="nom">
+        </div>
+
+        <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" class="form-control" id="prenom" name="prenom">
+        </div>
+
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" class="form-control" id="age" name="age">
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="genre" id="femme" value="false">
+          <label class="form-check-label" for="femme">
+            Femme
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="genre" id="homme" value="true">
+          <label class="form-check-label" for="homme">
+            Homme
+          </label>
+        </div>
+
+        {# Le bouton doit être de type submit : #}
+        <button class="btn btn-primary mt-2" type="submit">Valider</button>
+    </fieldset>
+</form>
+
+<script src="/javascript/ajoutLivre.js"></script>
+
+{% endblock %}

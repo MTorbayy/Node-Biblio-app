@@ -30,7 +30,7 @@ export const livres_affichage = (requete, reponse) => {
 
 //*****************Ajouter un nouveau livre et son image************************
 export const ajout_livre = (req, rep) => {
-    console.log(req.file)
+
     const livre = new livreModel({ //Les champs doivent bien correspondre au modèle
         _id: new mongoose.Types.ObjectId(), //Création auto d'un id
         nom: req.body.titre,
@@ -42,7 +42,6 @@ export const ajout_livre = (req, rep) => {
     
     livre.save() //Pour sauvegarder le nouvel objet
     .then(resultat => {
-        console.log(resultat)
         rep.redirect("/livres") // Pour rediriger sur la page quand l'action est terminée
     })
     .catch (error => console.log(error))

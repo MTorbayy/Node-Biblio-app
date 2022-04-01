@@ -6,18 +6,80 @@
 
 {% block contenu %} 
 
-<h2>Nom : {{auteur.nom}}</h2>
+    {% if isModification %}
 
-<h2>Prénom : {{auteur.prenom}}</h2>
+        <form id="ajoutForm" method="POST" action="/auteurs/modificationServer"> 
+            <fieldset>
+                <legend class="mt-2">Modification d'un auteur</legend>
 
-<div>Age : {{auteur.age}}</div>
+                <div class="form-group">
+                    <label for="prenom">Prénom</label>
+                    <input type="text" class="form-control" id="prenom" name="prenom" value="{{auteur.prenom}}">
+                </div>
 
-<div> Genre :
-{% if auteur.genre %}
-    Homme
-{% else %}
-    Femme
-{% endif %}
-</div>
+                <div class="form-group">
+                    <label for="nom">Nom</label>
+                    <input type="text" class="form-control" id="nom" name="nom" value="{{auteur.nom}}">
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" class="form-control" id="age" name="age" value="{{auteur.age}}">
+                </div>
+
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="genre" id="femme" value="false"
+                  {% if auteur.genre == false %} checked {% endif %}>
+                  <label class="form-check-label" for="femme">
+                    Femme
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="genre" id="homme" value="true"
+                  {% if auteur.genre %} checked {% endif %}>
+                  <label class="form-check-label" for="homme">
+                    Homme
+                  </label>
+                </div>
+
+                <input type="hidden" name="identifiant" value="{{auteur._id}}">
+                <button class="btn btn-primary mt-2" type="submit">Valider</button>
+            </fieldset>
+        </form>
+    {% else %}
+
+        <h2>Nom : {{auteur.nom}}</h2>
+
+        <h2>Prénom : {{auteur.prenom}}</h2>
+
+        <div>Age : {{auteur.age}}</div>
+
+        <div> Genre :
+        {% if auteur.genre %}
+            Homme
+        {% else %}
+            Femme
+        {% endif %}
+        </div>
+
+        <h2>Livres</h2>
+
+            <div class="row">
+            {% for livre in auteur.livres %}
+                <div class="col-6 mt-2">
+                    <div class="row">
+                        <div class="col-6">
+                            <img src="/images/{{livre.image}}" alt="livre" style="max-width:20vw">
+                        </div>
+
+                        <div class="col-6">
+                            <div>Titre : <a href="/livres/{{livre._id}}">{{livre.nom}}</a></div>
+                            <div>Nombre de pages : {{livre.pages}}</div>
+                        </div>
+                    </div>
+            </div>
+            {% endfor %}
+
+        {% endif %}
 
 {% endblock %}
